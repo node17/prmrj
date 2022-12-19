@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Layout, Menu, ConfigProvider, Button, Dropdown, message, Space, Descriptions, Breadcrumb, Card   } from 'antd';
-import { HomeOutlined, PrinterOutlined, FileSearchOutlined, FormOutlined, HistoryOutlined, SnippetsOutlined,FileOutlined, DownOutlined, UserOutlined, DatabaseOutlined, EditOutlined, ForkOutlined, DoubleLeftOutlined,CarOutlined ,FolderOpenOutlined,LayoutOutlined, SettingOutlined, BookOutlined, } from '@ant-design/icons';
+import { Layout, Menu, ConfigProvider, Button, Dropdown, message, Space, Descriptions, Breadcrumb, Card ,Table, Modal, Input  } from 'antd';
+import { HomeOutlined,DeleteOutlined , PrinterOutlined, AntDesignOutlined,FileSearchOutlined, CopyrightOutlined, PlusOutlined, FormOutlined, HistoryOutlined, SnippetsOutlined,FileOutlined, DownOutlined, UserOutlined, DatabaseOutlined, EditOutlined, ForkOutlined, DoubleLeftOutlined,CarOutlined ,FolderOpenOutlined,LayoutOutlined, SettingOutlined, BookOutlined, } from '@ant-design/icons';
 import './App.css'; // Tell webpack that Button.js uses these styles
 import BreadcrumbItem from 'antd/es/breadcrumb/BreadcrumbItem';
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Sider, Content , profilemenu} = Layout;
 
 const handleButtonClick = (e) => {
   message.info('Click on left button.');
@@ -87,49 +87,186 @@ const items = [
   },
 ];
 
-const profilemenu = [
-  {
-    label: 'Profile',
-    key: '11',
-    icon: <LayoutOutlined />,
-  },
-  {
-    label: 'Settings',
-    key: '21',
-    icon: <BookOutlined />,
-  },
-  {
-    label: 'LogOut',
-    key: '31',
-    icon: <ForkOutlined />,
-  },
 
-];
 
 const menuProps = {
   profilemenu,
   onClick: handleMenuClick,
 };
-const App = () => {
+function App() {
   const [current, setCurrent] = useState('mail');
   const onClick = (e) => {
     console.log('click ', e);
     setCurrent(e.key);
   }; 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [dataSource, setDataSource] = useState([
+    {
+      id: 1,
+      date: "21/12/2022",
+      klinik: "JANTUNG DAN PEMBULUH DARAH",
+      alergi: "udang",
+      diagnosa: "Jantung Koroner",
+      kode: "7",
+      obat: "-",
+      tindakan: "Operasi",
+      dokter: "dr. Sulaiman, Sp. PD",
+    },
+    {
+      id: 2,
+      date: "21/12/2022",
+      klinik: "JANTUNG DAN PEMBULUH DARAH",
+      alergi: "udang",
+      diagnosa: "Jantung Koroner",
+      kode: "7",
+      obat: "-",
+      tindakan: "Operasi",
+      dokter: "dr. Sulaiman, Sp. PD",
+    },
+    {
+      id: 3,
+      date: "21/12/2022",
+      klinik: "JANTUNG DAN PEMBULUH DARAH",
+      alergi: "udang",
+      diagnosa: "Jantung Koroner",
+      kode: "7",
+      obat: "-",
+      tindakan: "Operasi",
+      dokter: "dr. Sulaiman, Sp. PD",
+    },
+    {
+      id: 4,
+      date: "21/12/2022",
+      klinik: "JANTUNG DAN PEMBULUH DARAH",
+      alergi: "udang",
+      diagnosa: "Jantung Koroner",
+      kode: "7",
+      obat: "-",
+      tindakan: "Operasi",
+      dokter: "dr. Sulaiman, Sp. PD",
+    },
+  ]);
+  const columns = [
+    {
+      key: "1",
+      title: "NO",
+      dataIndex: "id",
+    },
+    {
+      key: "2",
+      title: "Tgl. Registrasi",
+      dataIndex: "date",
+    },
+    {
+      key: "3",
+      title: "Klinik yang dikunjungi",
+      dataIndex: "klinik",
+    },
+    {
+      key: "4",
+      title: "Alergi",
+      dataIndex: "alergi",
+    },
+    {
+      key: "5",
+      title: "Diagnosa",
+      dataIndex: "diagnosa",
+    },
+    {
+      key: "6",
+      title: "Kode ICD 10",
+      dataIndex: "kode",
+    },
+    {
+      key: "7",
+      title: "Pengobatan saat ini",
+      dataIndex: "obat",
+    },
+    {
+      key: "8",
+      title: "Tindakan",
+      dataIndex: "tindakan",
+    },
+    {
+      key: "9",
+      title: "Nama Dokter",
+      dataIndex: "dokter",
+    },
+    {
+      key: "10",
+      title: "Actions",
+      render: (record) => {
+        return (
+          <>
+            <EditOutlined
+              onClick={() => {
+                onEditStudent(record);
+              }}
+            />
+            <DeleteOutlined
+              onClick={() => {
+                onDeleteStudent(record);
+              }}
+              style={{ color: "red", marginLeft: 12 }}
+            />
+          </>
+        );
+      },
+    },
+  ];
+
+  const onAddStudent = () => {
+    const randomNumber = parseInt(Math.random() * 1000);
+    const newStudent = {
+      id: "99+",
+      date: "21/12/2022",
+      klinik: "JANTUNG DAN PEMBULUH DARAH",
+      alergi: "udang",
+      diagnosa: "Jantung Koroner",
+      kode: "7",
+      obat: "-",
+      tindakan: "Operasi",
+      dokter: "dr. Sulaiman, Sp. PD",
+    };
+    setDataSource((pre) => {
+      return [...pre, newStudent];
+    });
+  };
+  const onDeleteStudent = (record) => {
+    Modal.confirm({
+      title: "Apakah anda yakin akan menghapus data ini?",
+      okText: "Yes",
+      okType: "danger",
+      onOk: () => {
+        setDataSource((pre) => {
+          return pre.filter((student) => student.id !== record.id);
+        });
+      },
+    });
+  };
+  const onEditStudent = (record) => {
+    setIsEditing(true);
+    setEditingStudent({ ...record });
+  };
+  const resetEditing = () => {
+    setIsEditing(false);
+    setEditingStudent(null);
+  };
   return (
     
   <Layout>
 <React.Fragment>
-    <Header style={{backgroundColor: "#f7d263", display : "flex"}}>
+    <Header style={{backgroundColor: "#f6c159", display : "flex"}}>
       
           <h3 style={{display: "flex", justifyContent: "flex-start", marginTop: "auto", marginLeft: "none", color : "white", textAlign: "left"}}>
-            SISTEM INFORMASI RUMAH SAKIT
+          <AntDesignOutlined />&nbsp;&nbsp;SISTEM INFORMASI RUMAH SAKIT
           </h3>
           <h3 style={{display: "flex", justifyContent: "space-between",margin: "auto", color : "white"}}>
             RUMAH SAKIT X
           </h3>
 
-          <Dropdown menu={{items}}>
+          
       
       <Button  style={{backgroundColor: "#fae4a4", marginTop: "auto", marginBottom:"auto", marginRight: "none", display: "flex",justifyContent: "flex-end"}}>
       <UserOutlined style={{margin : "auto"}}/>
@@ -137,7 +274,7 @@ const App = () => {
       <DownOutlined style={{marginTop : "auto", marginBottom:"auto", marginRight: "none"}}/>
         
       </Button>
-    </Dropdown>
+
     
       </Header>
   
@@ -173,6 +310,7 @@ const App = () => {
       <Content style={{background:"white"}}>
         <div style={{margin:"25px"}}>
           <h1>Rekam Medik Pasien</h1>
+          <hr></hr>
         <Card
       size="small"
       title="Pelayanan Rawat Jalan : JANTUNG DAN PEMBULUH DARAH (Rawat Jalan)"
@@ -195,29 +333,127 @@ const App = () => {
     </Card>
     <Space direction="vertical" style={{marginTop:"15px" }}>
     <Space>
-      <Button icon={<PrinterOutlined />}>CETAK KARTU</Button>
-      <Button icon={<FileOutlined />}>GENERAL CONSENT</Button>
-      <Button icon={<ForkOutlined/>}>PEMERIKSAAN FISIK</Button>
-      <Button icon={<SnippetsOutlined />}>ASSESMEN MEDIS</Button>
-      <Button icon={<SnippetsOutlined />}>ASSESMEN KEPERAWATAN</Button>
-      <Button icon={<SnippetsOutlined />}>ASSESMEN AWAL NAPZA</Button>
-      <Button icon={<FileSearchOutlined />}>DIAGNOSIS (ICD-10)</Button>
-      <Button icon={<SnippetsOutlined />}>CPPT</Button>
-      <Button icon={<SnippetsOutlined />}>TINDAKAN</Button>
-      <Button icon={<SnippetsOutlined />}>RESEP</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<PrinterOutlined />}>CETAK KARTU</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<FileOutlined />}>GENERAL CONSENT</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<ForkOutlined/>}>PEMERIKSAAN FISIK</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>ASSESMEN MEDIS</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>ASSESMEN KEPERAWATAN</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>ASSESMEN AWAL NAPZA</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<FileSearchOutlined />}>DIAGNOSIS (ICD-10)</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>CPPT</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>TINDAKAN</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<SnippetsOutlined />}>RESEP</Button>
     </Space>
     <Space>
-      <Button icon={<FormOutlined />}>UPDATE PASIEN</Button>
-      <Button icon={<UserOutlined />}>PENUNJANG</Button>
-      <Button icon={<ForkOutlined/>}>KONSULTASI</Button>
-      <Button icon={<CarOutlined />}>TINDAK LANJUT</Button>
-      <Button type="primary"icon={<SnippetsOutlined />} style={{backgroundColor: "#FE9F23"}}>PRMRJ</Button>
-      <Button icon={<HistoryOutlined />}>DATA HISTORY</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<FormOutlined />}>UPDATE PASIEN</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<UserOutlined />}>PENUNJANG</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<ForkOutlined/>}>KONSULTASI</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<CarOutlined />}>TINDAK LANJUT</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)", backgroundColor: "#FE9F23"}} type="primary"icon={<SnippetsOutlined />}>PRMRJ</Button>
+      <Button style={{boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)"}} icon={<HistoryOutlined />}>DATA HISTORY</Button>
     </Space>
     </Space>
-    </div>    
+    </div>
+    <div style={{margin:"25px"}}>
+          <h3>&nbsp;&nbsp;&nbsp;&nbsp;<UserOutlined /> Profil Ringkas Medis Rawat Jalan(PRMRJ)</h3>
+          <hr></hr>
+        <Button onClick={onAddStudent} style={{marginBottom:"10px", marginRight:"none"}}>Tambah<PlusOutlined /></Button>
+        <Table columns={columns} dataSource={dataSource}></Table>
+        <Modal
+          title="Edit Data"
+          visible={isEditing}
+          okText="Save"
+          onCancel={() => {
+            resetEditing();
+          }}
+          onOk={() => {
+            setDataSource((pre) => {
+              return pre.map((student) => {
+                if (student.id === editingStudent.id) {
+                  return editingStudent;
+                } else {
+                  return student;
+                }
+              });
+            });
+            resetEditing();
+          }}
+        >
+          <Input addonBefore="Tgl. Registrasi"
+            value={editingStudent?.date}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, date: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Klinik"
+            value={editingStudent?.klinik}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, klinik: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Alergi"
+            value={editingStudent?.alergi}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, alergi: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Diagnosa"
+            value={editingStudent?.diagnosa}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, diagnosa: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Kode ICD 10"
+            value={editingStudent?.kode}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, kode: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Pengobatan saat ini"
+            value={editingStudent?.obat}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, obat: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Tindakan"
+            value={editingStudent?.tindakan}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, tindakan: e.target.value };
+              });
+            }}
+          />
+          <Input addonBefore="Nama Dokter"
+            value={editingStudent?.dokter}
+            onChange={(e) => {
+              setEditingStudent((pre) => {
+                return { ...pre, dokter: e.target.value };
+              });
+            }}
+          />
+        </Modal>
+        </div>
         </Content>
-      <Footer>Copyright</Footer>
+      <Footer>
+        <span>
+        21 Desember 2022 | User : Administrator - Zahra Administrator
+        </span>
+        <span style={{float:"right"}}>
+        Copyright <CopyrightOutlined />
+        </span>
+        </Footer>
       
     </Layout>
     );
